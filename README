@@ -1,0 +1,5 @@
+1° Rodar npm install na raiz para instalar workspaces.
+
+2° Instalar browsers do Playwright com npx playwright install dentro de test.
+
+3° Subir com docker compose up --build ou rodar npm run backend:dev e npm run frontend:dev.

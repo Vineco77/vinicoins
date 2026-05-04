@@ -1,0 +1,14 @@
+{
+  "name": "setup-base",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "test"
+  ],
+  "scripts": {
+    "frontend:dev": "npm --workspace frontend run start",
+    "backend:dev": "npm --workspace backend run start:dev",
+    "test:e2e": "npm --workspace test run test:e2e"
+  }
+}
