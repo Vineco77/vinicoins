@@ -1,3 +1,18 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  width: fit-content;
+}
+
 .card-container {
   perspective: 1000px; /* Essential for 3D depth */
   width: 300px;

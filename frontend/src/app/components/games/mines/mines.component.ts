@@ -6,10 +6,17 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface Card {
+  id: number;
+  isFlipped: boolean;
+}
 
 @Component({
   selector: 'app-mines',
   standalone: true,
+  imports: [CommonModule],
   animations: [
     trigger('flipState', [
       state('active', style({ transform: 'rotateY(179.9deg)' })),
@@ -21,11 +28,29 @@ import { Component, signal } from '@angular/core';
   styleUrl: './mines.component.scss',
 })
 export class MinesComponent {
-  isFlipped = signal('inactive');
+  cards = signal<Card[]>([]);
 
-  toggleFlip() {
-    this.isFlipped.update((val) =>
-      val === 'inactive' ? 'active' : 'inactive',
+  constructor() {
+    this.initializeCards();
+  }
+
+  private initializeCards() {
+    const newCards: Card[] = Array.from({ length: 12 }, (_, index) => ({
+      id: index,
+      isFlipped: false,
+    }));
+    this.cards.set(newCards);
+  }
+
+  toggleFlip(cardId: number) {
+    this.cards.update((cardList) =>
+      cardList.map((card) =>
+        card.id === cardId ? { ...card, isFlipped: !card.isFlipped } : card,
+      ),
     );
+  }
+
+  trackByCardId(index: number, card: Card): number {
+    return card.id;
   }
 }
