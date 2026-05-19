@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 interface Card {
   id: number;
   isFlipped: boolean;
+  backImage: 'bomb' | 'dima';
 }
 
 @Component({
@@ -35,11 +36,28 @@ export class MinesComponent {
   }
 
   private initializeCards() {
+    const cardImages: ('bomb' | 'dima')[] = [
+      ...Array(9).fill('bomb'),
+      ...Array(3).fill('dima'),
+    ];
+
+    const shuffledImages = this.shuffleArray(cardImages);
+
     const newCards: Card[] = Array.from({ length: 12 }, (_, index) => ({
       id: index,
       isFlipped: false,
+      backImage: shuffledImages[index],
     }));
     this.cards.set(newCards);
+  }
+
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   toggleFlip(cardId: number) {

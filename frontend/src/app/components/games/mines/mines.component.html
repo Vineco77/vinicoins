@@ -14,7 +14,10 @@
       </div>
       <!-- Back Face -->
       <div class="card-back">
-        <h3>Back Side</h3>
+        <img
+          [src]="'assets/' + card.backImage + '.png'"
+          [alt]="card.backImage"
+        />
       </div>
     </div>
   </div>
