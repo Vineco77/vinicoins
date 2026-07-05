@@ -1,36 +1,88 @@
-<div class="card-container" (click)="toggleFlip()">
-  <div class="card-inner" [@flipState]="isFlipped()">
-    <!-- Front Face -->
-    <div class="card-front">
-      <h3>Front Side</h3>
+<section class="mines-layout">
+  <header class="game-panel">
+    <div class="panel-copy">
+      <p class="eyebrow">Mines</p>
+      <h1>Pick three diamonds in a row.</h1>
+      <p class="description">
+        A bomb ends the round and removes your full bet. A clean streak pays 30%
+        of the amount you wager.
+      </p>
     </div>
-    <!-- Back Face -->
-    <div class="card-back">
-      <h3>Back Side</h3>
+
+    <div class="balance-card">
+      <span>Balance</span>
+      <strong class="balance-viniCoins">{{
+        formatViniCoins(userService.user().viniCoins)
+      }}</strong>
+      <small>ViniCoins</small>
     </div>
+  </header>
+
+  <section class="controls">
+    <label class="bet-field">
+      <span>Bet amount</span>
+      <input
+        type="number"
+        min="1"
+        step="1"
+        [disabled]="roundActive()"
+        [value]="betAmount()"
+        (input)="onBetAmountChange($event)"
+      />
+    </label>
+
+    <button
+      type="button"
+      class="start-button"
+      (click)="startNewGame()"
+      [disabled]="roundActive()"
+    >
+      Start new game
+    </button>
+  </section>
+
+  <p
+    class="status-line"
+    [class.is-error]="
+      !roundActive() &&
+      (roundMessage().startsWith('Enter') ||
+        roundMessage().startsWith('You only'))
+    "
+  >
+    {{ roundMessage() }}
+  </p>
+
+  <p class="progress-line">Diamonds found: {{ diamondsFound() }}/3</p>
+
+  <div class="cards-grid">
+    <button
+      *ngFor="let card of cards(); trackBy: trackByCardId"
+      type="button"
+      class="card-container"
+      (click)="toggleFlip(card.id)"
+      [disabled]="!roundActive() || card.isFlipped"
+      [attr.aria-label]="
+        card.isFlipped
+          ? card.isDiamond
+            ? 'Diamond card'
+            : 'Bomb card'
+          : 'Hidden card'
+      "
+    >
+      <div
+        class="card-inner"
+        [@flipState]="card.isFlipped ? 'active' : 'inactive'"
+      >
+        <div class="card-front">
+          <span>?</span>
+        </div>
+        <div class="card-back" [class.is-diamond]="card.isDiamond">
+          <img
+            [src]="card.backImage"
+            [alt]="card.isDiamond ? 'Diamond' : 'Bomb'"
+          />
+        </div>
+      </div>
+    </button>
   </div>
-</div>
-<div class="card-container" (click)="toggleFlip()">
-  <div class="card-inner" [@flipState]="isFlipped()">
-    <!-- Front Face -->
-    <div class="card-front">
-      <h3>Front Side</h3>
-    </div>
-    <!-- Back Face -->
-    <div class="card-back">
-      <h3>Back Side</h3>
-    </div>
-  </div>
-</div>
-<div class="card-container" (click)="toggleFlip()">
-  <div class="card-inner" [@flipState]="isFlipped()">
-    <!-- Front Face -->
-    <div class="card-front">
-      <h3>Front Side</h3>
-    </div>
-    <!-- Back Face -->
-    <div class="card-back">
-      <h3>Back Side</h3>
-    </div>
-  </div>
-</div>
+</section>

@@ -1,9 +1,30 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-vinicoins}
+      POSTGRES_USER: ${POSTGRES_USER:-vinicoins}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vinicoins}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vinicoins -d vinicoins"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     build:
       context: ./backend
+    environment:
+      PORT: ${BACKEND_PORT:-3000}
+      DATABASE_URL: ${DATABASE_URL:-postgres://vinicoins:vinicoins@postgres:5432/vinicoins}
+      SECRET_KEY: ${SECRET_KEY}
     ports:
       - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   frontend:
     build:
